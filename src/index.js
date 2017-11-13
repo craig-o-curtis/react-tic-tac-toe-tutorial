@@ -4,15 +4,24 @@ import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import RaisedButton from 'material-ui/RaisedButton';
 
-class Square extends React.Component {
-  /* state managed by parent Board component */
-  render() {
-    return (
-      <button className="square" onClick={ () => this.props.toggleSquare() }>
-        {this.props.value}
-      </button>
-    );
-  }
+// class Square extends React.Component {
+//   /* state managed by parent Board component */
+//   render() {
+//     return (
+//       <button className="square" onClick={ () => this.props.toggleSquare() }>
+//         {this.props.value}
+//       </button>
+//     );
+//   }
+// }
+function Square(vm) {
+  return (
+    <button
+      className="square"
+      onClick={ vm.toggleSquare }>
+      {vm.value}
+    </button>
+  );
 }
 
 
@@ -21,14 +30,18 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      xIsNext: true
     }
   }
 
   handleToggle(i) {
     const squares = this.state.squares.slice();
     /* slice is to make a copy of the array */    
-    squares[i] = 'X';
-    this.setState( {squares: squares} )
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState( {
+      squares: squares,
+      xIsNext: !this.state.xIsNext
+    } )
   }
 
   /* used in JSX below {this.renderSquare(0)} */
@@ -42,8 +55,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
-
+    const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     return (
       <div className="board-status-container">
         <div className="status">{status}</div>
